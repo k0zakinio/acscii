@@ -1,7 +1,8 @@
+import java.util.Scanner;
 public class Canvas {
   int height, width;
   String[][] canvas;
-  public Canvas(int h, int w) {
+  public void createCanvas(int h, int w) {
     this.height = h;
     this.width = w;
     this.generateCanvas();
@@ -65,10 +66,17 @@ public class Canvas {
   public void parseInput(String input) {
     String[] splitInput = input.split(" ");
     String command = splitInput[0];
+    if(command.equals("C")) {
+      int h = Integer.parseInt(splitInput[1]);
+      int w = Integer.parseInt(splitInput[2]);
+      this.createCanvas(h, w);
+      this.renderCanvas();
+    }
     if(command.equals("P")) {
       int x1 = Integer.parseInt(splitInput[1]);  
       int y1 = Integer.parseInt(splitInput[2]);
       this.drawPoint(x1, y1);
+      this.renderCanvas();
     }
     if(command.equals("L")) {
       int x1 = Integer.parseInt(splitInput[1]);  
@@ -76,6 +84,7 @@ public class Canvas {
       int x2 = Integer.parseInt(splitInput[3]);  
       int y2 = Integer.parseInt(splitInput[4]);  
       this.drawLine(x1, y1, x2, y2);
+      this.renderCanvas();
     }
     if(command.equals("S")) {
       int x1 = Integer.parseInt(splitInput[1]);  
@@ -83,22 +92,19 @@ public class Canvas {
       int x2 = Integer.parseInt(splitInput[3]);  
       int y2 = Integer.parseInt(splitInput[4]);  
       this.drawSquare(x1, y1, x2, y2);
+      this.renderCanvas();
+    }
+    if(command.equals("Q")) {
+      System.exit(0);
     }
   }
 
   public static void main(String[] args) {
-    Canvas test = new Canvas(5,10);
-    test.renderCanvas();
-    test.drawPoint(3,2);
-    test.renderCanvas();
-    test.drawLine(9, 0, 9, 4);
-    test.renderCanvas();
-    test.parseInput("P 0 1");
-    test.renderCanvas();
-    test.parseInput("L 0 0 9 0");
-    test.renderCanvas();
-    Canvas newTest = new Canvas(5, 10);
-    newTest.parseInput("S 1 1 4 4");
-    newTest.renderCanvas();
+    Scanner keyboard = new Scanner(System.in);
+    Canvas instance = new Canvas();
+    while(true) {
+      System.out.print("Enter command: ");
+      instance.parseInput(keyboard.nextLine()); 
+    }
   }
-}
+
