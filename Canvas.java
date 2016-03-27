@@ -34,7 +34,7 @@ public class Canvas {
   }
 
   // Find a cell based off x and y coordinates
-  public Cell findCell(int x, int y) {
+  private Cell findCell(int x, int y) {
     for(Cell c: this.cells) {
       if(c.x == x && c.y == y) {
 	return c;
