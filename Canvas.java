@@ -3,15 +3,37 @@ import java.util.HashSet;
 
 public class Canvas {
   int height, width;
-  String[][] canvas;
   Cell[] cells;
-
+  String[] undoStr;
+  
   public void createCanvas(int w, int h) {
     this.height = h;
     this.width = w;
     generateCellList();
+    storeCellVals();
   }
 
+  public void clearCanvas() {
+    for(Cell c: this.cells) {
+      c.clear();
+    }
+  }
+
+  public void undo() {
+    for(int i = 0; i < this.cells.length; i++) {
+      String oldVal = this.undoStr[i];
+      this.cells[i].point(oldVal);
+    } 
+  }
+
+  private void storeCellVals() {
+    this.undoStr = new String[this.height * this.width];
+    for(int i = 0; i < this.cells.length; i++) {
+      this.undoStr[i] = this.cells[i].val; 
+    }
+  }
+
+  // Find a cell based off x and y coordinates
   public Cell findCell(int x, int y) {
     for(Cell c: this.cells) {
       if(c.x == x && c.y == y) {
@@ -21,6 +43,7 @@ public class Canvas {
     return null;
   }
 
+  // Create a flat array, which assigns an x and y coordinates to a new Cell (based on it's index)
   private void generateCellList() {
     int size = this.width * this.height;
     Cell[] cellList = new Cell[size];
@@ -33,6 +56,7 @@ public class Canvas {
     this.cells = cellList;
   }
 
+  // Draws the canvas 
   public void renderCanvas() {
     String result = "";
     String vertRow = "";
@@ -56,6 +80,7 @@ public class Canvas {
     System.out.println(result);
   }
 
+  // Checks if the x or y coordinate is out of bounds, if not find the cell and draw a point
   public void drawPoint(int x, int y) {
     if(x < 0 || x >= this.width || y < 0 || y >= this.height) {
       int maxWidth = this.width - 1, maxHeight = this.height - 1;
@@ -64,6 +89,7 @@ public class Canvas {
     findCell(x,y).point("x");
   }
 
+  // Checks if the line is horizontal or vertical, then draws the points between the start and end points
   public void drawLine(int x1, int y1, int x2, int y2) {
     if(x1 == x2) {
       for(int row = y1; row <= y2; row++) {
@@ -76,6 +102,7 @@ public class Canvas {
     }
   }
 
+  // Draws lines to all four corners of the square (also draws rectangles)
   public void drawSquare(int x1, int y1, int x2, int y2) {
     drawLine(x1, y1, x2, y1);
     drawLine(x1, y1, x1, y2);
@@ -83,15 +110,16 @@ public class Canvas {
     drawLine(x1, y2, x2, y2);
   }
 
+  // Checks if a previous hash has been provided, identfies the neighbouring cells
+  // runs through the neighbouring cells, filling providing they are fillable 
+  // and not already filled - recursively calls until no more cells to fill
   public void bucketFill(int x, int y, String filler, HashSet<Cell> hset) {
-    // CHECK IF A PREVIOUS ARRAY HAS BEEN SUPPLIED, IF NOT MAKE A NEW ONE
     HashSet<Cell> prevHash;
     if(hset != null) {
       prevHash = hset;
     } else {
       prevHash = new HashSet<Cell>();
     }
-    // CHECK THE SURROUNDING CELLS FOR POSSIBLE FILLS
     int[][] neighbours = new int[][] {
         			      	{0,-1},// N  
         			      	{1,-1},// NE
@@ -112,6 +140,7 @@ public class Canvas {
     }
   }
 
+  // Checks if the cell is out of bounds, or that that the cell does not contain a point "x"
   private boolean canFill(int x, int y) {
     if(x < this.width && x >= 0 && y < this.height && y >= 0 && !findCell(x,y).val.equals("x")) {
       return true;
@@ -119,43 +148,57 @@ public class Canvas {
     return false;
   }
 
+  // Interprets the user input to make calls to the methods, splits the user input string
   public void parseInput(String input) {
     String[] splitInput = input.split(" ");
     String command = splitInput[0];
     if(command.equals("C")) {
       int h = Integer.parseInt(splitInput[1]);
       int w = Integer.parseInt(splitInput[2]);
-      this.createCanvas(h, w);
-      this.renderCanvas();
+      createCanvas(h, w);
+      renderCanvas();
     }
     if(command.equals("P")) {
+      storeCellVals();
       int x1 = Integer.parseInt(splitInput[1]);  
       int y1 = Integer.parseInt(splitInput[2]);
-      this.drawPoint(x1, y1);
-      this.renderCanvas();
+      drawPoint(x1, y1);
+      renderCanvas();
     }
     if(command.equals("L")) {
+      storeCellVals();
       int x1 = Integer.parseInt(splitInput[1]);  
       int y1 = Integer.parseInt(splitInput[2]);  
       int x2 = Integer.parseInt(splitInput[3]);  
       int y2 = Integer.parseInt(splitInput[4]);  
-      this.drawLine(x1, y1, x2, y2);
-      this.renderCanvas();
+      drawLine(x1, y1, x2, y2);
+      renderCanvas();
     }
     if(command.equals("S")) {
+      storeCellVals();
       int x1 = Integer.parseInt(splitInput[1]);  
       int y1 = Integer.parseInt(splitInput[2]);  
       int x2 = Integer.parseInt(splitInput[3]);  
       int y2 = Integer.parseInt(splitInput[4]);  
-      this.drawSquare(x1, y1, x2, y2);
-      this.renderCanvas();
+      drawSquare(x1, y1, x2, y2);
+      renderCanvas();
     }
     if(command.equals("B")) {
+      storeCellVals();
       String filler = splitInput[3];
       int x1 = Integer.parseInt(splitInput[1]);
       int y1 = Integer.parseInt(splitInput[2]);
-      this.bucketFill(x1, y1, filler, null);
-      this.renderCanvas();
+      bucketFill(x1, y1, filler, null);
+      renderCanvas();
+    }
+    if(command.equals("E")) {
+      storeCellVals();
+      clearCanvas();
+      renderCanvas();
+    }
+    if(command.equals("U")) {
+      undo();
+      renderCanvas();
     }
     if(command.equals("Q")) {
       System.exit(0);

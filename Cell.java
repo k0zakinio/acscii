@@ -1,6 +1,9 @@
+import java.util.ArrayList;
+
 public class Cell {
   int x, y;
   String val;
+  
   public Cell(int x, int y) {
     this.val = " ";
     this.x = x;
