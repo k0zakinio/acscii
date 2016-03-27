@@ -24,12 +24,11 @@ public class Canvas {
 
   public void generateCellList() {
     int size = this.width * this.height;
-
     Cell[] cellList = new Cell[size];
 
     for(int index = 0; index < cellList.length; index++) {
-      int y = (int) (Math.floor(index/this.height));
-      int x = (int) (Math.floor(index - (y * this.height)));
+      int y = (int) (Math.floor(index/this.width));
+      int x = (index - (y * this.width));
       cellList[index] = new Cell(x, y);
     }
     this.cells = cellList;
@@ -165,6 +164,8 @@ public class Canvas {
     Canvas instance = new Canvas();
     instance.createCanvas(15, 5);
     instance.generateCellList();
-    System.out.println(instance.cells[1]);
+    for(int i = 0; i < instance.cells.length; i++) {
+      System.out.println("x = " + instance.cells[i].x + ", y = " + instance.cells[i].y );
+    }
   }
 }
