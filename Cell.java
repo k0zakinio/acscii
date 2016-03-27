@@ -2,7 +2,7 @@ public class Cell {
   int x, y;
   char val;
   public Cell(int x, int y) {
-    this.val = 'x';
+    this.val = ' ';
     this.x = x;
     this.y = y;
   }

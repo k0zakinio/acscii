@@ -22,6 +22,15 @@ public class Canvas {
     }
   }
 
+  public Cell findCell(int x, int y) {
+    for(Cell c: this.cells) {
+      if(c.x == x && c.y == y) {
+	return c;
+      }
+    }
+    return null;
+  }
+
   public void generateCellList() {
     int size = this.width * this.height;
     Cell[] cellList = new Cell[size];
@@ -44,10 +53,10 @@ public class Canvas {
     
     result += vertRow + "\n";
     
-    for(int row = 0; row < this.height; row++) {
+    for(int y = 0; y < this.height; y++) {
       String rowString = "|";
-      for(int col = 0; col < this.width; col++) {
-	rowString += this.canvas[row][col];
+      for(int x = 0; x < this.width; x++) {
+	rowString += findCell(x, y).val;
       }
       rowString += "|\n";
       result += rowString;
@@ -167,5 +176,6 @@ public class Canvas {
     for(int i = 0; i < instance.cells.length; i++) {
       System.out.println("x = " + instance.cells[i].x + ", y = " + instance.cells[i].y );
     }
+    instance.renderCanvas();
   }
 }
