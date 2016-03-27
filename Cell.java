@@ -1,15 +1,17 @@
 public class Cell {
   int x, y;
-  char val;
+  String val;
   public Cell(int x, int y) {
-    this.val = ' ';
+    this.val = " ";
     this.x = x;
     this.y = y;
   }
 
-  public void point() {
-    this.val = 'x';
+  public void point(String val) {
+    this.val = val;
   }
 
-
+  public void clear() {
+    this.val = " ";
+  }
 }

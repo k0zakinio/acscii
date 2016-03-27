@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.HashSet;
 
@@ -10,16 +9,7 @@ public class Canvas {
   public void createCanvas(int w, int h) {
     this.height = h;
     this.width = w;
-    generateCanvas();
-  }
-
-  private void generateCanvas() {
-    this.canvas = new String[this.height][this.width];
-    for(int row = 0; row < this.height; row++) {
-      for(int col = 0; col < this.width; col++) {
-	this.canvas[row][col] = " ";
-      }
-    }
+    generateCellList();
   }
 
   public Cell findCell(int x, int y) {
@@ -31,7 +21,7 @@ public class Canvas {
     return null;
   }
 
-  public void generateCellList() {
+  private void generateCellList() {
     int size = this.width * this.height;
     Cell[] cellList = new Cell[size];
 
@@ -67,7 +57,11 @@ public class Canvas {
   }
 
   public void drawPoint(int x, int y) {
-    canvas[y][x] = "x";
+    if(x < 0 || x >= this.width || y < 0 || y >= this.height) {
+      int maxWidth = this.width - 1, maxHeight = this.height - 1;
+      throw new IllegalArgumentException("Unable to draw point x:" + x + ", y:" + y + ".  Outside of canvas (max x:" + maxWidth  + ", max y: " + maxHeight + ")");
+    }
+    findCell(x,y).point("x");
   }
 
   public void drawLine(int x1, int y1, int x2, int y2) {
@@ -89,38 +83,37 @@ public class Canvas {
     drawLine(x1, y2, x2, y2);
   }
 
-  //public void bucketFill(int x, int y, char filler, HashSet<int[]> hset) {
-  //  // CHECK IF A PREVIOUS ARRAY HAS BEEN SUPPLIED, IF NOT MAKE A NEW ONE
-  //  HashSet<int[]> prevHash;
-  //  if(hset != null) {
-  //    prevHash = hset;
-  //  } else {
-  //    prevHash = new HashSet<int[]>();
-  //  }
-  //  // CHECK THE SURROUNDING CELLS FOR POSSIBLE FILLS
-  //  int[][] neighbours = new int[][] {
-  //      			      	{0,-1},// N  
-  //      			      	{1,-1},// NE
-  //      			      	{1,0}, // E
-  //      				{1,1}, // SE
-  //      			      	{0,1}, // S
-  //      			      	{-1,1},// SW
-  //      			      	{-1,0},// W
-  //      			      	{-1,-1}// NW
-  //      			     };
-  //  for(int[] n: neighbours) {
-  //    int[] toFill = new int[] {x + n[0], y + n[1]};
-  //    if(canFill(toFill[0], toFill[1]) && !prevHash.contains(toFill)) {
-  //      prevHash.add(toFill);
-  //      //this.bucketFill(toFill[0], toFill[1], "o", prevHash);
-  //      System.out.println(prevHash);
-  //      bucketFill(toFill[0], toFill[1], 'o', prevHash);
-  //    }
-  //  }
-  //}
+  public void bucketFill(int x, int y, String filler, HashSet<Cell> hset) {
+    // CHECK IF A PREVIOUS ARRAY HAS BEEN SUPPLIED, IF NOT MAKE A NEW ONE
+    HashSet<Cell> prevHash;
+    if(hset != null) {
+      prevHash = hset;
+    } else {
+      prevHash = new HashSet<Cell>();
+    }
+    // CHECK THE SURROUNDING CELLS FOR POSSIBLE FILLS
+    int[][] neighbours = new int[][] {
+        			      	{0,-1},// N  
+        			      	{1,-1},// NE
+        			      	{1,0}, // E
+        				{1,1}, // SE
+        			      	{0,1}, // S
+        			      	{-1,1},// SW
+        			      	{-1,0},// W
+        			      	{-1,-1}// NW
+        			     };
+    for(int[] n: neighbours) {
+      Cell toFill = findCell(x + n[0], y + n[1]);
+      if(toFill != null && canFill(toFill.x, toFill.y) && !prevHash.contains(toFill)) {
+        prevHash.add(toFill);
+	toFill.point(filler);
+        bucketFill(toFill.x, toFill.y, filler, prevHash);
+      }
+    }
+  }
 
   private boolean canFill(int x, int y) {
-    if(x < this.width && x >= 0 && y < this.height && y >= 0 && !this.canvas[y][x].equals("x")) {
+    if(x < this.width && x >= 0 && y < this.height && y >= 0 && !findCell(x,y).val.equals("x")) {
       return true;
     }
     return false;
@@ -157,25 +150,24 @@ public class Canvas {
       this.drawSquare(x1, y1, x2, y2);
       this.renderCanvas();
     }
+    if(command.equals("B")) {
+      String filler = splitInput[3];
+      int x1 = Integer.parseInt(splitInput[1]);
+      int y1 = Integer.parseInt(splitInput[2]);
+      this.bucketFill(x1, y1, filler, null);
+      this.renderCanvas();
+    }
     if(command.equals("Q")) {
       System.exit(0);
     }
   }
 
   public static void main(String[] args) {
-    //Scanner keyboard = new Scanner(System.in);
-    //Canvas instance = new Canvas();
-    //while(true) {
-    //  System.out.print("Enter command: ");
-    //  instance.parseInput(keyboard.nextLine()); 
-    //}
-    
+    Scanner keyboard = new Scanner(System.in);
     Canvas instance = new Canvas();
-    instance.createCanvas(15, 5);
-    instance.generateCellList();
-    for(int i = 0; i < instance.cells.length; i++) {
-      System.out.println("x = " + instance.cells[i].x + ", y = " + instance.cells[i].y );
+    while(true) {
+      System.out.print("Enter command: ");
+      instance.parseInput(keyboard.nextLine()); 
     }
-    instance.renderCanvas();
   }
 }
