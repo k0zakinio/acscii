@@ -6,6 +6,9 @@ You will notice there is no testing, however I may revisit and add some testing 
 
 #### How it works
 
+Run 'javac Canvas.java Cell.Java' from the terminal  
+Run 'java Canvas'
+
 Simply put, the editor allows you to:  
 
 * Create a canvas: C [width] [height]  
@@ -17,4 +20,32 @@ Simply put, the editor allows you to:
 * Undo last action: U
 * Quit: Q
 
+##### Screenshots
+*Create a canvas*  
+
+![Imgur](http://i.imgur.com/xZgCRPm.png)
+
+*Add a point*
+
+![Imgur](http://i.imgur.com/CDCAfDW.png)
+
+*Draw a line*  
+
+![Imgur](http://i.imgur.com/jj4399e.png)
+
+*Draw a square/rectanglei*  
+
+![Imgur](http://i.imgur.com/njZ3OcB.png)
+
+*Bucket fill*  
+
+![Imgur](http://i.imgur.com/skSaupx.png)
+
+*Undo*  
+
+![Imgur](http://i.imgur.com/xSk2mT4.png)
+
+*Empty Canvas*  
+
+![Imgur](http://i.imgur.com/FSKQ7m6.png)
 
