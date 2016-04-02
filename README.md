@@ -2,8 +2,6 @@
 
 A simple ASCII image editor, a tech test which I have used to try and get a better understanding of Java.  
 
-You will notice there is no testing, however I may revisit and add some testing when I figure out how best to test in Java.
-
 #### How it works
 
 clone the repo, cd into it and run 'java app/Canvas'  
