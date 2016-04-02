@@ -11,10 +11,10 @@ public class Canvas {
     this.height = h;
     this.width = w;
     generateCellList();
-    storeCellVals();
   }
 
   public void clearCanvas() {
+    storeCellVals();
     for(Cell c: this.cells) {
       c.clear();
     }
@@ -55,10 +55,11 @@ public class Canvas {
       cellList[index] = new Cell(x, y);
     }
     this.cells = cellList;
+    storeCellVals();
   }
 
   // Draws the canvas
-  public String renderCanvas() {
+  public String createRenderString() {
     String result = "";
     String vertRow = "";
 
@@ -81,8 +82,14 @@ public class Canvas {
     return result;
   }
 
+  // Draws the canvas to the console
+  private void renderCanvas() {
+    renderCanvas();
+  }
+
   // Checks if the x or y coordinate is out of bounds, if not find the cell and draw a point
   public void drawPoint(int x, int y) {
+    storeCellVals();
     if(x < 0 || x >= this.width || y < 0 || y >= this.height) {
       int maxWidth = this.width - 1, maxHeight = this.height - 1;
       throw new IllegalArgumentException("Unable to draw point x:" + x + ", y:" + y + ".  Outside of canvas (max x:" + maxWidth  + ", max y: " + maxHeight + ")");
@@ -92,6 +99,7 @@ public class Canvas {
 
   // Checks if the line is horizontal or vertical, then draws the points between the start and end points
   public void drawLine(int x1, int y1, int x2, int y2) {
+    storeCellVals();
     if(x1 == x2) {
       for(int row = y1; row <= y2; row++) {
 	drawPoint(x1, row);
@@ -105,6 +113,7 @@ public class Canvas {
 
   // Draws lines to all four corners of the square (also draws rectangles)
   public void drawSquare(int x1, int y1, int x2, int y2) {
+    storeCellVals();
     drawLine(x1, y1, x2, y1);
     drawLine(x1, y1, x1, y2);
     drawLine(x2, y1, x2, y2);
@@ -119,6 +128,7 @@ public class Canvas {
     if(hset != null) {
       prevHash = hset;
     } else {
+      storeCellVals();
       prevHash = new HashSet<Cell>();
     }
     int[][] neighbours = new int[][] {
@@ -157,49 +167,44 @@ public class Canvas {
       int h = Integer.parseInt(splitInput[1]);
       int w = Integer.parseInt(splitInput[2]);
       createCanvas(h, w);
-      System.out.println(renderCanvas());
+      renderCanvas();
     }
     if(command.equals("P")) {
-      storeCellVals();
       int x1 = Integer.parseInt(splitInput[1]);
       int y1 = Integer.parseInt(splitInput[2]);
       drawPoint(x1, y1);
-      System.out.println(renderCanvas());
+      renderCanvas();
     }
     if(command.equals("L")) {
-      storeCellVals();
       int x1 = Integer.parseInt(splitInput[1]);
       int y1 = Integer.parseInt(splitInput[2]);
       int x2 = Integer.parseInt(splitInput[3]);
       int y2 = Integer.parseInt(splitInput[4]);
       drawLine(x1, y1, x2, y2);
-      System.out.println(renderCanvas());
+      renderCanvas();
     }
     if(command.equals("S")) {
-      storeCellVals();
       int x1 = Integer.parseInt(splitInput[1]);
       int y1 = Integer.parseInt(splitInput[2]);
       int x2 = Integer.parseInt(splitInput[3]);
       int y2 = Integer.parseInt(splitInput[4]);
       drawSquare(x1, y1, x2, y2);
-      System.out.println(renderCanvas());
+      renderCanvas();
     }
     if(command.equals("B")) {
-      storeCellVals();
       String filler = splitInput[3];
       int x1 = Integer.parseInt(splitInput[1]);
       int y1 = Integer.parseInt(splitInput[2]);
       bucketFill(x1, y1, filler, null);
-      System.out.println(renderCanvas());
+      renderCanvas();
     }
     if(command.equals("E")) {
-      storeCellVals();
       clearCanvas();
-      System.out.println(renderCanvas());
+      renderCanvas();
     }
     if(command.equals("U")) {
       undo();
-      System.out.println(renderCanvas());
+      renderCanvas();
     }
     if(command.equals("Q")) {
       System.exit(0);
