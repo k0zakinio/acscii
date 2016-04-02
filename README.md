@@ -6,15 +6,15 @@ You will notice there is no testing, however I may revisit and add some testing 
 
 #### How it works
 
-Run 'javac Canvas.java Cell.Java' from the terminal  
-Run 'java Canvas'
+clone the repo, cd into it and run 'java app/Canvas'  
+To run tests, run 'java app/test/TestRunner'
 
-Simply put, the editor allows you to:  
+The editor allows you to:  
 
 * Create a canvas: C [width] [height]  
 * Draw a point: P [x1] [y2]  
 * Draw a line: L [x1] [y1] [x2] [y2]  
-* Draw a square/rectange: S [x1] [y1] [x2] [y2]  (1 being upper left and 2 being low right corners)  
+* Draw a square/rectange: S [x1] [y1] [x2] [y2] *//1 being upper left and 2 being lower right corners)*   
 * Bucket fill: B [x1] [y1] [filler]  
 * Clear canvas: E
 * Undo last action: U
