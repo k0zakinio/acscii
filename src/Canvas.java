@@ -84,7 +84,7 @@ public class Canvas {
 
 	// Draws the canvas to the console
 	private void renderCanvas() {
-		renderCanvas();
+		System.out.println(createRenderString());
 	}
 
 	// Checks if the x or y coordinate is out of bounds, if not find the cell and draw a point
