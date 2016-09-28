@@ -1,6 +1,7 @@
-package app;
-import java.util.Scanner;
+package com.company.springer;
+
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class Canvas {
 	int height, width;
@@ -8,7 +9,7 @@ public class Canvas {
 	String[] undoStr;
 
 	public void createCanvas(int w, int h) {
-		this.height = h;
+        this.height = h;
 		this.width = w;
 		generateCellList();
 	}

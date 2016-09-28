@@ -1,4 +1,4 @@
-package app;
+package com.company.springer;
 import java.util.ArrayList;
 
 public class Cell {
